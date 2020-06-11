@@ -1,0 +1,248 @@
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Netflix - By Levy Guilherme</title>
+    <link rel="shortcut icon" href="./images/netflix_horror.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap" rel="stylesheet">
+    <style>
+      html, body {
+        padding: 0;
+        margin: 0;
+        font-family: 'Metal Mania', cursive;
+      }
+
+      .principal {
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        position: relative;
+      }
+
+      .quadrado-principal{
+        box-sizing: border-box;
+        width: 300px;
+        height: 300px;
+        background-color: brown;
+        text-align: center;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .quadrado-principal h3 {
+        color: black;
+        font-size: 30px;
+      }
+
+      #jogo {
+        width: 600px;
+        height: 600px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #jogo .line {
+        width: 100%;
+        height: 200px;
+        display: flex;
+      }
+
+      .box {
+        width: 200px;
+        height: 200px;
+        border: 2px white dotted;
+        font-size: 70px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .box:hover {
+        background-color: #a2b8e2;
+        cursor: crosshair;
+      }
+
+      .jogador-images {
+        height: 150px;
+      }
+
+      .btn-restart-game {
+        width: 300px;
+        height: 50px;
+      }
+
+      @media only screen and (max-width: 600px) {
+        #jogo {
+          width: 300px;
+          height: 300px;
+        }
+
+        #jogo .line {
+          width: 100%;
+          height: 100px;
+        }
+
+        .box {
+          width: 100px;
+          height: 100px;
+        }
+
+        .jogador-images {
+          height: 80px;
+        }
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div class="principal">
+      <div class="quadrado-principal">
+        <h3>web</h3>
+        <img src="./images/netflix_horror.png" width="200" />
+      </div>
+    </div>
+
+    <div class="principal">
+      <div id="jogo" >
+        
+      </div>
+    </div>
+  </body>
+
+  <script>
+    var $ = document.querySelector.bind( document )
+
+    var simbolo1 = "<img class='jogador-images' src='./images/nigan.png'>"
+    var simbolo2 = "<img class='jogador-images' src='./images/rick.png'>"
+    var simbolo3 = "<img class='jogador-images' src='./images/zumbis.png'>"
+
+    var ultimo_jogador = simbolo1
+
+    var initialGame = `
+      <div class="line">
+        <div id="box1" class="box"></div>
+        <div id="box2" class="box"></div>
+        <div id="box3" class="box"></div>
+      </div>
+      <div class="line">
+        <div id="box4" class="box"></div>
+        <div id="box5" class="box"></div>
+        <div id="box6" class="box"></div>
+      </div>
+      <div class="line">
+        <div id="box7" class="box"></div>
+        <div id="box8" class="box"></div>
+        <div id="box9" class="box"></div>
+      </div>
+    `
+
+    startGame()
+
+    function changePlayer(box, simbolo) {
+      box.innerHTML = simbolo
+      ultimo_jogador = simbolo
+    }
+
+    function verificarGanhador(){
+      verificarLinhas()
+      verificarLinhasTortas()
+      verificarColunas()
+      veriricarSeDeuVelha()
+    }
+
+    function veriricarSeDeuVelha(){
+      if(
+        $('#box1').innerHTML != '' &&
+        $('#box2').innerHTML != '' &&
+        $('#box3').innerHTML != '' &&
+        $('#box4').innerHTML != '' &&
+        $('#box5').innerHTML != '' &&
+        $('#box6').innerHTML != '' &&
+        $('#box7').innerHTML != '' &&
+        $('#box8').innerHTML != '' &&
+        $('#box9').innerHTML != ''
+      ) {
+        dispararVelha()
+      }
+    }
+
+    function verificarLinhasTortas() {
+      if($('#box1').innerHTML != '' && $('#box1').innerHTML == $('#box5').innerHTML && $('#box5').innerHTML == $('#box9').innerHTML){
+        dispararGanhador()
+      }
+
+      if($('#box3').innerHTML != '' && $('#box3').innerHTML == $('#box5').innerHTML && $('#box5').innerHTML == $('#box7').innerHTML){
+        dispararGanhador()
+      }
+    }
+
+    function verificarLinhas(){
+      if($('#box1').innerHTML != '' && $('#box1').innerHTML == $('#box2').innerHTML && $('#box2').innerHTML == $('#box3').innerHTML){
+        dispararGanhador()
+      }
+
+      if($('#box4').innerHTML != '' && $('#box4').innerHTML == $('#box5').innerHTML && $('#box5').innerHTML == $('#box6').innerHTML){
+        dispararGanhador()
+      }
+
+      if($('#box7').innerHTML != '' && $('#box7').innerHTML == $('#box8').innerHTML && $('#box8').innerHTML == $('#box9').innerHTML){
+        dispararGanhador()
+      }
+    }
+
+    function verificarColunas(){
+      if($('#box1').innerHTML != '' && $('#box1').innerHTML == $('#box4').innerHTML && $('#box4').innerHTML == $('#box7').innerHTML){
+        dispararGanhador()
+      }
+
+      if($('#box2').innerHTML != '' && $('#box2').innerHTML == $('#box5').innerHTML && $('#box5').innerHTML == $('#box8').innerHTML){
+        dispararGanhador()
+      }
+
+      if($('#box3').innerHTML != '' && $('#box3').innerHTML == $('#box6').innerHTML && $('#box6').innerHTML == $('#box9').innerHTML){
+        dispararGanhador()
+      }
+    }
+
+    function dispararGanhador() {
+      $('#jogo').innerHTML = ultimo_jogador + '<br>' + '<h1>parabéns você ganhou</h1>' + '<br>' + "<button onclick='startGame()' class='btn-restart-game'>reiniciar jogo</button>"
+      return
+    }
+
+    function dispararVelha() {
+      $('#jogo').innerHTML = simbolo3 + '<br>' + '<h1>deu velha</h1>' + '<br>' + "<button onclick='startGame()' class='btn-restart-game'>reiniciar jogo</button>"
+      return
+    }
+
+    function startGame() {
+      $('#jogo').innerHTML = initialGame
+
+      document.querySelectorAll('.box').forEach(function (box, index) {
+        box.addEventListener('click', function () {
+          if(box.innerHTML != '') {
+            return
+          }
+          
+          if(ultimo_jogador == simbolo1) {
+            changePlayer(box, simbolo2)
+            
+          } else {
+            changePlayer(box, simbolo1)
+          }
+          
+          verificarGanhador()
+        })
+      })
+    }
+
+  </script>
+</html>
